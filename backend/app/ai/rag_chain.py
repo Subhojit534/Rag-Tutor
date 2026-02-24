@@ -8,7 +8,8 @@ from app.ai.llm import generate_response
 from app.ai.prompts import (
     SOCRATIC_TUTOR_SYSTEM_PROMPT,
     TOPIC_EXTRACTION_PROMPT,
-    OUT_OF_SCOPE_RESPONSE
+    OUT_OF_SCOPE_RESPONSE,
+    NOT_IN_MATERIAL_RESPONSE
 )
 
 
@@ -81,22 +82,13 @@ async def rag_query(
         return (answer, citations, True)
         
     else:
-        # --- GENERAL MODE ---
-        # Fallback to general knowledge if no specific content is found
-        from app.ai.prompts import GENERAL_TUTOR_SYSTEM_PROMPT
-        
-        full_prompt = GENERAL_TUTOR_SYSTEM_PROMPT.format(
-            subject_name=subject_name,
-            question=question
+        # --- NOT IN MATERIAL MODE ---
+        # No relevant content found in uploaded PDFs
+        not_found_response = NOT_IN_MATERIAL_RESPONSE.format(
+            subject_name=subject_name
         )
         
-        answer = await generate_response(
-            prompt=full_prompt,
-            system_prompt="You are a helpful academic tutor.",
-            temperature=0.7
-        )
-        
-        return (answer, [], True)  # We return True for is_in_scope because we are answering it generally
+        return (not_found_response, [], False)  # is_in_scope = False since topic not in materials
 
 
 async def extract_topic(question: str) -> Optional[str]:

@@ -1,0 +1,334 @@
+.\venv\Scripts\python.exe : C
+:\Users\asush\OneDrive\Deskto
+p\RAG Tutor\backend\venv\Lib\
+site-packages\pypdf\_crypt_pr
+oviders\_cryptography.py:32: 
+CryptographyDeprecationWarnin
+g: ARC4 has been moved to cry
+ptography.hazmat.decrepit.cip
+hers.algorithms.ARC4 and 
+will be removed from cryptogr
+aphy.hazmat.primitives.cipher
+s.algorithms in 48.0.0.
+At line:1 char:1
++ .\venv\Scripts\python.exe 
+-m uvicorn app.main:app 
+--port 8000 2>&1 |  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (C:\User  
+  s\asush\...thms in 48.0.   
+ 0.:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+  from cryptography.hazmat.pr
+imitives.ciphers.algorithms 
+import AES, ARC4
+Traceback (most recent call 
+last):
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\numpy\
+core\__init__.py", line 24, 
+in <module>
+    from . import multiarray
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\numpy\
+core\multiarray.py", line 
+10, in <module>
+    from . import overrides
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\numpy\
+core\overrides.py", line 8, 
+in <module>
+    from 
+numpy.core._multiarray_umath 
+import (
+        add_docstring,  
+_get_implementing_args, 
+_ArrayFunctionDispatcher)
+ModuleNotFoundError: No 
+module named 'numpy.core._mul
+tiarray_umath'
+
+During handling of the above 
+exception, another exception 
+occurred:
+
+Traceback (most recent call 
+last):
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\numpy\
+__init__.py", line 144, in 
+<module>
+    from numpy.__config__ 
+import show as show_config
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\numpy\
+__config__.py", line 4, in 
+<module>
+    from 
+numpy.core._multiarray_umath 
+import (
+    ...<3 lines>...
+    )
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\numpy\
+core\__init__.py", line 50, 
+in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS 
+FOR ADVICE ON HOW TO SOLVE 
+THIS ISSUE!
+
+Importing the numpy 
+C-extensions failed. This 
+error can happen for
+many reasons, often due to 
+issues with your setup or 
+how NumPy was
+installed.
+
+We have compiled some common 
+reasons and troubleshooting 
+tips at:
+
+    https://numpy.org/devdocs
+/user/troubleshooting-importe
+rror.html
+
+Please note and check the 
+following:
+
+  * The Python version is: 
+Python3.14 from "C:\Users\asu
+sh\OneDrive\Desktop\RAG Tutor
+\backend\venv\Scripts\python.
+exe"
+  * The NumPy version is: 
+"1.26.4"
+
+and make sure that they are 
+the versions you expect.
+Please carefully study the 
+documentation linked above 
+for further help.
+
+Original error was: No 
+module named 'numpy.core._mul
+tiarray_umath'
+
+
+The above exception was the 
+direct cause of the 
+following exception:
+
+Traceback (most recent call 
+last):
+  File "<frozen runpy>", 
+line 198, in 
+_run_module_as_main
+  File "<frozen runpy>", 
+line 88, in _run_code
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\uvicor
+n\__main__.py", line 4, in 
+<module>
+    uvicorn.main()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\click\
+core.py", line 1485, in 
+__call__
+    return self.main(*args, 
+**kwargs)
+           
+~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\click\
+core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\click\
+core.py", line 1269, in 
+invoke
+    return 
+ctx.invoke(self.callback, 
+**ctx.params)
+           ~~~~~~~~~~^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\click\
+core.py", line 824, in invoke
+    return callback(*args, 
+**kwargs)
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\uvicor
+n\main.py", line 418, in main
+    run(
+    ~~~^
+        app,
+        ^^^^
+    ...<45 lines>...
+        h11_max_incomplete_ev
+ent_size=h11_max_incomplete_e
+vent_size,
+        ^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\uvicor
+n\main.py", line 587, in run
+    server.run()
+    ~~~~~~~~~~^^
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\uvicor
+n\server.py", line 62, in run
+    return asyncio.run(self.s
+erve(sockets=sockets))
+           ~~~~~~~~~~~^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asush\AppDat
+a\Local\Python\pythoncore-3.1
+4-64\Lib\asyncio\runners.py",
+ line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\asush\AppDat
+a\Local\Python\pythoncore-3.1
+4-64\Lib\asyncio\runners.py",
+ line 127, in run
+    return self._loop.run_unt
+il_complete(task)
+           ~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~^^^^^^
+  File "C:\Users\asush\AppDat
+a\Local\Python\pythoncore-3.1
+4-64\Lib\asyncio\base_events.
+py", line 719, in 
+run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\uvicor
+n\server.py", line 69, in 
+serve
+    config.load()
+    ~~~~~~~~~~~^^
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\uvicor
+n\config.py", line 458, in 
+load
+    self.loaded_app = 
+import_from_string(self.app)
+                      
+~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\uvicor
+n\importer.py", line 21, in 
+import_from_string
+    module = importlib.import
+_module(module_str)
+  File "C:\Users\asush\AppDat
+a\Local\Python\pythoncore-3.1
+4-64\Lib\importlib\__init__.p
+y", line 88, in import_module
+    return _bootstrap._gcd_im
+port(name[level:], package, 
+level)
+           ~~~~~~~~~~~~~~~~~~
+~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^
+  File "<frozen 
+importlib._bootstrap>", line 
+1398, in _gcd_import
+  File "<frozen 
+importlib._bootstrap>", line 
+1371, in _find_and_load
+  File "<frozen 
+importlib._bootstrap>", line 
+1342, in 
+_find_and_load_unlocked
+  File "<frozen 
+importlib._bootstrap>", line 
+938, in _load_unlocked
+  File "<frozen importlib._bo
+otstrap_external>", line 
+759, in exec_module
+  File "<frozen 
+importlib._bootstrap>", line 
+491, in 
+_call_with_frames_removed
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG 
+Tutor\backend\app\main.py", 
+line 13, in <module>
+    from app.routers import 
+auth, admin, student, 
+teacher, quiz, assignment, 
+chat, ai_tutor
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+app\routers\teacher.py", 
+line 16, in <module>
+    from 
+app.services.ai_indexing 
+import index_pdf_document
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+app\services\ai_indexing.py",
+ line 9, in <module>
+    from app.ai.vector_store 
+import get_vector_store, 
+reindex_subject
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+app\ai\vector_store.py", 
+line 7, in <module>
+    import faiss
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\faiss\
+__init__.py", line 27, in 
+<module>
+    import numpy as np
+  File "C:\Users\asush\OneDri
+ve\Desktop\RAG Tutor\backend\
+venv\Lib\site-packages\numpy\
+__init__.py", line 149, in 
+<module>
+    raise ImportError(msg) 
+from e
+ImportError: Error importing 
+numpy: you should not try to 
+import numpy from
+        its source 
+directory; please exit the 
+numpy source tree, and 
+relaunch
+        your python 
+interpreter from there.

@@ -27,9 +27,9 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "./uploads"
     FAISS_INDEX_DIR: str = "./faiss_indexes"
     
-    # AI Configuration
-    OLLAMA_BASE_URL: str = "http://localhost:11434"
-    OLLAMA_MODEL: str = "phi3:mini"
+    # AI Configuration (Google Gemini)
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.0-flash-lite"
     
     # Rate Limiting
     AI_RATE_LIMIT_PER_MINUTE: int = 10

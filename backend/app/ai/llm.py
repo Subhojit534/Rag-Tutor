@@ -1,26 +1,31 @@
 """
-LLM Module - Phi-3 Mini via Ollama (Local, Offline)
-Uses LangChain for better abstraction and stability.
+LLM Module - Google Gemini API
+Uses google-generativeai for fast, free cloud inference.
 """
 from typing import AsyncGenerator
-from langchain_community.chat_models import ChatOllama
-from langchain.schema import HumanMessage, SystemMessage
+import google.generativeai as genai
 from app.config import settings
 import logging
 
 logger = logging.getLogger(__name__)
 
-def get_llm(temperature: float = 0.7, max_tokens: int = 1024):
+# Configure API key on module load
+genai.configure(api_key=settings.GEMINI_API_KEY)
+
+
+def get_llm(temperature: float = 0.7):
     """
-    Get configured ChatOllama instance.
+    Get configured Gemini GenerativeModel instance.
     """
-    return ChatOllama(
-        base_url=settings.OLLAMA_BASE_URL,
-        model=settings.OLLAMA_MODEL,
+    generation_config = genai.GenerationConfig(
         temperature=temperature,
-        num_predict=max_tokens,
-        timeout=120.0
+        max_output_tokens=1024,
     )
+    return genai.GenerativeModel(
+        model_name=settings.GEMINI_MODEL,
+        generation_config=generation_config,
+    )
+
 
 async def generate_response(
     prompt: str,
@@ -29,37 +34,41 @@ async def generate_response(
     max_tokens: int = 1024
 ) -> str:
     """
-    Generate response using Phi-3 Mini via Ollama (LangChain).
-    
+    Generate response using Google Gemini API.
+
     Args:
         prompt: User prompt
-        system_prompt: System instructions
+        system_prompt: System instructions (prepended to prompt)
         temperature: Sampling temperature
         max_tokens: Maximum tokens to generate
-        
+
     Returns:
         Generated response text
     """
     try:
-        llm = get_llm(temperature, max_tokens)
-        
-        messages = []
-        if system_prompt:
-            messages.append(SystemMessage(content=system_prompt))
-        
-        messages.append(HumanMessage(content=prompt))
-        
-        response = await llm.ainvoke(messages)
-        return response.content
-        
+        generation_config = genai.GenerationConfig(
+            temperature=temperature,
+            max_output_tokens=max_tokens,
+        )
+        model = genai.GenerativeModel(
+            model_name=settings.GEMINI_MODEL,
+            generation_config=generation_config,
+            system_instruction=system_prompt if system_prompt else None,
+        )
+
+        # Use async generation
+        response = await model.generate_content_async(prompt)
+        return response.text
+
     except Exception as e:
-        logger.error(f"Ollama generation failed: {str(e)}")
+        logger.error(f"Gemini generation failed: {str(e)}")
         logger.error(f"Exception type: {type(e).__name__}")
-        # Check if it's a connection error
-        if "connection" in str(e).lower() or "timeout" in str(e).lower():
-            return "I apologize, but I cannot connect to my AI engine right now. Please ensure Ollama is running."
-        # Otherwise generic error
+        if "quota" in str(e).lower() or "429" in str(e):
+            return "I'm currently rate-limited. Please try again in a moment."
+        if "api_key" in str(e).lower() or "api key" in str(e).lower():
+            return "Gemini API key is missing or invalid. Please set GEMINI_API_KEY in your .env file."
         return f"I encountered an error while processing your request: {str(e)[:100]}"
+
 
 async def generate_stream(
     prompt: str,
@@ -67,29 +76,42 @@ async def generate_stream(
     temperature: float = 0.7
 ) -> AsyncGenerator[str, None]:
     """
-    Stream response from Phi-3 Mini via Ollama.
+    Stream response from Google Gemini API.
     """
     try:
-        llm = get_llm(temperature)
-        
-        messages = []
-        if system_prompt:
-            messages.append(SystemMessage(content=system_prompt))
-        
-        messages.append(HumanMessage(content=prompt))
-        
-        async for chunk in llm.astream(messages):
-            yield chunk.content
-            
+        generation_config = genai.GenerationConfig(
+            temperature=temperature,
+            max_output_tokens=1024,
+        )
+        model = genai.GenerativeModel(
+            model_name=settings.GEMINI_MODEL,
+            generation_config=generation_config,
+            system_instruction=system_prompt if system_prompt else None,
+        )
+
+        response = await model.generate_content_async(prompt, stream=True)
+        async for chunk in response:
+            if chunk.text:
+                yield chunk.text
+
     except Exception as e:
         yield f"Error: {str(e)}"
 
-async def check_ollama_health() -> bool:
-    """Check if Ollama is running and model is available."""
-    # Simple check by trying to invoke with a tiny prompt
+
+async def check_llm_health() -> bool:
+    """Check if Gemini API is reachable and key is valid."""
     try:
-        llm = get_llm(max_tokens=1)
-        await llm.ainvoke("hi")
+        generation_config = genai.GenerationConfig(max_output_tokens=5)
+        model = genai.GenerativeModel(
+            model_name=settings.GEMINI_MODEL,
+            generation_config=generation_config,
+        )
+        await model.generate_content_async("hi")
         return True
-    except:
+    except Exception as e:
+        logger.warning(f"Gemini health check failed: {e}")
         return False
+
+
+# Keep backward-compatible alias
+check_ollama_health = check_llm_health

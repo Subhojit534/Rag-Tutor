@@ -206,7 +206,9 @@ async def get_subject_notes(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_student_user)
 ):
-    """Get notes for a specific subject."""
+    """Get notes/PDFs for a specific subject (from PDFDocument table)."""
+    from app.models.ai import PDFDocument
+    
     profile = db.query(StudentProfile).filter(
         StudentProfile.user_id == current_user.id
     ).first()
@@ -214,32 +216,22 @@ async def get_subject_notes(
     if not profile:
         raise HTTPException(status_code=404, detail="Student profile not found")
     
-    # Find the class allocation for this subject and student's batch
-    allocation = db.query(ClassAllocation).filter(
-        ClassAllocation.subject_id == subject_id,
-        ClassAllocation.degree_id == profile.degree_id,
-        ClassAllocation.department_id == profile.department_id,
-        ClassAllocation.semester_id == profile.current_semester_id,
-        ClassAllocation.is_active == True
-    ).first()
-    
-    if not allocation:
-        # It's possible the subject is assigned but no specific class allocation exists yet
-        # or it's a generic subject. But for notes, we need an allocation.
-        return []
-
-    notes = db.query(ClassNote).filter(
-        ClassNote.class_allocation_id == allocation.id
-    ).order_by(ClassNote.uploaded_at.desc()).all()
+    # Get active, indexed PDFs for this subject
+    pdfs = db.query(PDFDocument).filter(
+        PDFDocument.subject_id == subject_id,
+        PDFDocument.is_active == True
+    ).order_by(PDFDocument.created_at.desc()).all()
     
     return [
         {
-            "id": n.id,
-            "title": n.title,
-            "file_url": n.file_url,
-            "uploaded_at": n.uploaded_at
+            "id": p.id,
+            "title": p.file_name,
+            "file_url": f"/uploads/{p.file_path}" if p.file_path else "",
+            "file_size": p.file_size,
+            "is_indexed": p.is_indexed,
+            "uploaded_at": p.created_at
         }
-        for n in notes
+        for p in pdfs
     ]
 
 

@@ -3,17 +3,16 @@ AI Indexing Service - Shared logic for extracting and indexing PDFs.
 """
 from typing import List, Dict, Optional
 from datetime import datetime
-from pypdf import PdfReader
 from sqlalchemy.orm import Session
 from app.models.ai import PDFDocument
 from app.ai.vector_store import get_vector_store, reindex_subject
 from app.utils.file_handler import get_full_path
-from app.utils.pdf_ocr import extract_text_from_scanned_pdf
 
 
 def extract_pdf_chunks(file_path: str, source_name: str, chunk_size: int = 500) -> List[dict]:
     """
     Extract text chunks from PDF for indexing.
+    Uses PyMuPDF (fitz) which handles both text and scanned PDFs.
     
     Args:
         file_path: Path to PDF file
@@ -26,48 +25,35 @@ def extract_pdf_chunks(file_path: str, source_name: str, chunk_size: int = 500) 
     chunks = []
     
     try:
-        reader = PdfReader(file_path)
+        import fitz  # PyMuPDF
         
-        # Check if we got any reasonable text from the whole document
-        full_text_check = "".join([page.extract_text() or "" for page in reader.pages])
+        doc = fitz.open(file_path)
         
-        if len(full_text_check.strip()) < 100:
-             # Likely a scanned PDF, try OCR on the whole file
-             print(f"Detected scanned PDF: {source_name}, switching to OCR...")
-             ocr_text = extract_text_from_scanned_pdf(file_path)
-             
-             if ocr_text:
-                 # Clean and chunk the OCR text associated with page 1
-                 text = ' '.join(ocr_text.split())
-                 words = text.split()
-                 current_chunk = []
-                 current_length = 0
-                 
-                 for word in words:
-                    current_chunk.append(word)
-                    current_length += len(word) + 1
+        for page_num in range(len(doc)):
+            page = doc[page_num]
+            
+            # Extract text (works for both text-based and many scanned PDFs)
+            text = page.get_text()
+            
+            # If no text found, try OCR via Tesseract (if available)
+            if not text or len(text.strip()) < 20:
+                try:
+                    # Try to get text from page images using Tesseract
+                    import pytesseract
+                    from PIL import Image
+                    import io
                     
-                    if current_length >= chunk_size:
-                        chunks.append({
-                            "text": ' '.join(current_chunk),
-                            "source": source_name,
-                            "page": 1 
-                        })
-                        current_chunk = []
-                        current_length = 0
-                 
-                 if current_chunk:
-                    chunks.append({
-                        "text": ' '.join(current_chunk),
-                        "source": source_name,
-                        "page": 1
-                    })
-                 return chunks
-
-        # Standard Processing if text was found
-        for page_num, page in enumerate(reader.pages, 1):
-            text = page.extract_text()
-            if not text:
+                    # Render page to image at 300 DPI
+                    pix = page.get_pixmap(dpi=200)
+                    img_data = pix.tobytes("png")
+                    img = Image.open(io.BytesIO(img_data))
+                    
+                    text = pytesseract.image_to_string(img)
+                except Exception as ocr_err:
+                    print(f"OCR failed for page {page_num + 1} of {source_name}: {ocr_err}")
+                    continue
+            
+            if not text or len(text.strip()) < 10:
                 continue
             
             # Clean text
@@ -86,7 +72,7 @@ def extract_pdf_chunks(file_path: str, source_name: str, chunk_size: int = 500) 
                     chunks.append({
                         "text": ' '.join(current_chunk),
                         "source": source_name,
-                        "page": page_num
+                        "page": page_num + 1
                     })
                     current_chunk = []
                     current_length = 0
@@ -96,11 +82,17 @@ def extract_pdf_chunks(file_path: str, source_name: str, chunk_size: int = 500) 
                 chunks.append({
                     "text": ' '.join(current_chunk),
                     "source": source_name,
-                    "page": page_num
+                    "page": page_num + 1
                 })
+        
+        page_count = len(doc)
+        doc.close()
+        print(f"Extracted {len(chunks)} chunks from {source_name} ({page_count} pages)")
     
     except Exception as e:
         print(f"Error extracting PDF: {e}")
+        import traceback
+        traceback.print_exc()
     
     return chunks
 

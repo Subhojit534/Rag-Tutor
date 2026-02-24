@@ -17,26 +17,25 @@ from app.routers import auth, admin, student, teacher, quiz, assignment, chat, a
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
     # Startup
-    print("🚀 Starting RAG Tutor Backend...")
+    print("[*] Starting RAG Tutor Backend...")
     
     # Ensure upload directories exist
     settings.uploads_path.mkdir(parents=True, exist_ok=True)
     settings.faiss_path.mkdir(parents=True, exist_ok=True)
     
-    print(f"📁 Uploads directory: {settings.uploads_path}")
-    print(f"📁 Uploads directory: {settings.uploads_path}")
-    print(f"🧠 FAISS indexes directory: {settings.faiss_path}")
+    print(f"[+] Uploads directory: {settings.uploads_path}")
+    print(f"[+] FAISS indexes directory: {settings.faiss_path}")
 
     # Initialize DB and seed data
-    print("🔧 Initializing database...")
+    print("[*] Initializing database...")
     init_db()
-    print("🌱 Seeding initial data...")
+    print("[*] Seeding initial data...")
     init_data()
     
     yield
     
     # Shutdown
-    print("👋 Shutting down RAG Tutor Backend...")
+    print("[*] Shutting down RAG Tutor Backend...")
 
 
 # Create FastAPI app
@@ -83,15 +82,15 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Detailed health check."""
-    from app.ai.llm import check_ollama_health
+    from app.ai.llm import check_llm_health
     
-    ollama_status = await check_ollama_health()
+    llm_status = await check_llm_health()
     
     return {
         "status": "healthy",
         "database": "connected",
-        "ollama": "connected" if ollama_status else "disconnected",
-        "ai_model": settings.OLLAMA_MODEL
+        "llm": "connected" if llm_status else "disconnected",
+        "ai_model": settings.GEMINI_MODEL
     }
 
 

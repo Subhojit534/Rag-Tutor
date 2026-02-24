@@ -1,0 +1,80 @@
+.\venv\Scripts\python.exe : 
+INFO:faiss.loader:Loading faiss 
+with AVX512 support.
+At line:1 char:1
++ .\venv\Scripts\python.exe -m 
+uvicorn app.main:app --port 8000 
+2>&1 |  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSp 
+   ecified: (INFO:faiss.load...AVX  
+  512 support.:String) [], Remote   
+ Exception
+    + FullyQualifiedErrorId : Nativ 
+   eCommandError
+ 
+INFO:faiss.loader:Could not load 
+library with AVX512 support due to:
+ModuleNotFoundError("No module 
+named 'faiss.swigfaiss_avx512'")
+INFO:faiss.loader:Loading faiss 
+with AVX2 support.
+INFO:faiss.loader:Successfully 
+loaded faiss with AVX2 support.
+C:\Users\asush\OneDrive\Desktop\RAG 
+Tutor\backend\app\ai\llm.py:6: 
+FutureWarning: 
+
+All support for the 
+`google.generativeai` package has 
+ended. It will no longer be 
+receiving 
+updates or bug fixes. Please switch 
+to the `google.genai` package as 
+soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/dep
+recated-generative-ai-python/blob/ma
+in/README.md
+
+  import google.generativeai as 
+genai
+INFO:     Started server process 
+[22632]
+INFO:     Waiting for application 
+startup.
+ERROR:    Traceback (most recent 
+call last):
+  File "C:\Users\asush\OneDrive\Desk
+top\RAG Tutor\backend\venv\Lib\site-
+packages\starlette\routing.py", 
+line 738, in lifespan
+    async with 
+self.lifespan_context(app) as 
+maybe_state:
+  File "C:\Users\asush\AppData\Local
+\Programs\Python\Python311\Lib\conte
+xtlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asush\OneDrive\Desk
+top\RAG Tutor\backend\app\main.py", 
+line 20, in lifespan
+    print("\U0001f680 Starting RAG 
+Tutor Backend...")
+  File "C:\Users\asush\AppData\Local
+\Programs\Python\Python311\Lib\encod
+ings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(inp
+ut,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec 
+can't encode character '\U0001f680' 
+in position 0: character maps to 
+<undefined>
+
+ERROR:    Application startup 
+failed. Exiting.

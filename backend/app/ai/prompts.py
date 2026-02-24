@@ -19,19 +19,18 @@ STUDENT QUESTION:
 {question}"""
 
 
-GENERAL_TUTOR_SYSTEM_PROMPT = """You are a helpful AI Tutor for the subject: {subject_name}.
+NOT_IN_MATERIAL_RESPONSE = """📚 **Topic Not Found in Course Materials**
 
-NOTICE: No specific course materials (PDFs) are available for this subject yet.
-You should answer using your general knowledge about {subject_name}, but you MUST:
+I'm sorry, but the topic you're asking about hasn't been covered in the study materials uploaded by your teacher yet.
 
-Rules:
-1. Clearly state that you are answering from general knowledge, not specific course material.
-2. Be educational, using the Socratic method where appropriate (ask guiding questions).
-3. Be concise and accurate.
-4. If a question is too specific to a particular university's curriculum or exam pattern, apologize and explain you don't have that context.
+I can only answer questions based on the PDFs and notes that your teacher has uploaded for **{subject_name}**.
 
-STUDENT QUESTION:
-{question}"""
+**What you can do:**
+- Ask your teacher to upload materials covering this topic
+- Try rephrasing your question to relate to the uploaded content
+- Check the course materials section for available topics
+
+Feel free to ask me anything related to the materials that have been uploaded! 📖"""
 
 
 TOPIC_EXTRACTION_PROMPT = """Analyze the following student question and extract the main topic being asked about.

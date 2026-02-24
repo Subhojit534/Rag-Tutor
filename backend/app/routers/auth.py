@@ -79,6 +79,30 @@ async def register_student(request: StudentRegister, db: Session = Depends(get_d
             detail="Roll number already exists"
         )
     
+    # Validate that degree, department, and semester exist
+    from app.models.academic import Degree, Department, Semester
+    
+    degree = db.query(Degree).filter(Degree.id == request.degree_id).first()
+    if not degree:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Degree with id {request.degree_id} does not exist. Please create it in the admin panel first."
+        )
+    
+    department = db.query(Department).filter(Department.id == request.department_id).first()
+    if not department:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Department with id {request.department_id} does not exist. Please create it in the admin panel first."
+        )
+    
+    semester = db.query(Semester).filter(Semester.id == request.semester_id).first()
+    if not semester:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Semester with id {request.semester_id} does not exist. Please create it in the admin panel first."
+        )
+    
     # Create user
     user = User(
         email=request.email,
