@@ -1,0 +1,23 @@
+
+=== QUERY: SELECT id, full_name, role, email FROM users ===
+(1, 'System Administrator', 'admin', 'admin@college.edu')
+(4, 'Subhojit Paul', 'student', 'hg407567@gmail.com')
+(5, 'Swagato Paul', 'teacher', 'swagatopaul92@gmail.com')
+(6, 'Sayan Das', 'student', 'swagato@gmail.com')
+
+=== QUERY: SELECT id, user_id, roll_number FROM student_profiles ===
+(3, 4, '16900124182')
+(4, 6, '16900124180')
+
+=== QUERY: SELECT id, user_id, employee_id FROM teacher_profiles ===
+(1, 5, '1001')
+
+=== QUERY: SELECT id, student_id, teacher_id FROM chat_conversations ===
+(1, 3, 1)
+
+=== QUERY: SELECT id, conversation_id, sender_role, message FROM chat_messages WHERE conversation_id = 1 ===
+(1, 1, 'student', 'Hiii')
+(2, 1, 'student', 'Hiii')
+(3, 1, 'student', 'Hiii')
+(4, 1, 'student', 'Hiii')
+(5, 1, 'student', 'Hiii')

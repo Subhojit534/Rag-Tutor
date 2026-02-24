@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Student Theme */
+  --student-primary: #4A6FA5;
+  --student-secondary: #6B9080;
+  --student-accent: #88B4A8;
+  --student-bg: #F5F7FA;
+  
+  /* Teacher Theme */
+  --teacher-primary: #2C7A7B;
+  --teacher-secondary: #6B5B95;
+  --teacher-accent: #81E6D9;
+  --teacher-bg: #F7FAFC;
+  
+  /* Admin Theme */
+  --admin-primary: #4A5568;
+  --admin-secondary: #2D3748;
+  --admin-accent: #63B3ED;
+  --admin-bg: #EDF2F7;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Professional card styles */
+@layer components {
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-md hover:border-gray-200;
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2 rounded-lg font-medium text-white transition-all duration-200;
+  }
+  
+  .btn-student {
+    @apply btn-primary bg-student-primary hover:bg-opacity-90;
+  }
+  
+  .btn-teacher {
+    @apply btn-primary bg-teacher-primary hover:bg-opacity-90;
+  }
+  
+  .btn-admin {
+    @apply btn-primary bg-admin-primary hover:bg-opacity-90;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all;
+  }
+  
+  .input-student {
+    @apply input-field focus:ring-student-primary focus:border-student-primary;
+  }
+  
+  .input-teacher {
+    @apply input-field focus:ring-teacher-primary focus:border-teacher-primary;
+  }
+  
+  .input-admin {
+    @apply input-field focus:ring-admin-primary focus:border-admin-primary;
+  }
+  
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .badge-success {
+    @apply badge bg-green-100 text-green-800;
+  }
+  
+  .badge-warning {
+    @apply badge bg-yellow-100 text-yellow-800;
+  }
+  
+  .badge-danger {
+    @apply badge bg-red-100 text-red-800;
+  }
+  
+  .badge-info {
+    @apply badge bg-blue-100 text-blue-800;
+  }
+}
+
+/* Sidebar navigation */
+.sidebar-link {
+  @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 transition-all duration-200;
+}
+
+.sidebar-link:hover {
+  @apply bg-gray-100 text-gray-900;
+}
+
+.sidebar-link.active {
+  @apply bg-gray-100 text-gray-900 font-medium;
+}
+
+/* Student sidebar active */
+.sidebar-link.active.student {
+  @apply bg-student-primary bg-opacity-10 text-student-primary;
+}
+
+/* Teacher sidebar active */
+.sidebar-link.active.teacher {
+  @apply bg-teacher-primary bg-opacity-10 text-teacher-primary;
+}
+
+/* Admin sidebar active */
+.sidebar-link.active.admin {
+  @apply bg-admin-primary bg-opacity-10 text-admin-primary;
+}
+
+/* Table styles */
+.table-professional {
+  @apply w-full text-left;
+}
+
+.table-professional thead {
+  @apply bg-gray-50 border-b border-gray-200;
+}
+
+.table-professional th {
+  @apply px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider;
+}
+
+.table-professional td {
+  @apply px-6 py-4 text-sm text-gray-700;
+}
+
+.table-professional tbody tr {
+  @apply border-b border-gray-100 hover:bg-gray-50 transition-colors;
+}
+
+/* AI Chat styles */
+.ai-message {
+  @apply p-4 rounded-2xl max-w-[85%];
+}
+
+.ai-message.user {
+  @apply bg-student-primary text-white ml-auto rounded-br-sm;
+}
+
+.ai-message.assistant {
+  @apply bg-gray-100 text-gray-800 mr-auto rounded-bl-sm;
+}
+
+/* Loading animation */
+.loading-dots {
+  @apply inline-flex gap-1;
+}
+
+.loading-dots span {
+  @apply w-2 h-2 bg-gray-400 rounded-full animate-bounce;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.2s;
+}

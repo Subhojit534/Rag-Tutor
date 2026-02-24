@@ -1,0 +1,100 @@
+"""
+RAG Tutor Backend - Main FastAPI Application
+"""
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from contextlib import asynccontextmanager
+from app.config import settings
+from app.database import init_db
+from app.initial_data import init_data
+
+# Import routers
+from app.routers import auth, admin, student, teacher, quiz, assignment, chat, ai_tutor
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan events."""
+    # Startup
+    print("🚀 Starting RAG Tutor Backend...")
+    
+    # Ensure upload directories exist
+    settings.uploads_path.mkdir(parents=True, exist_ok=True)
+    settings.faiss_path.mkdir(parents=True, exist_ok=True)
+    
+    print(f"📁 Uploads directory: {settings.uploads_path}")
+    print(f"📁 Uploads directory: {settings.uploads_path}")
+    print(f"🧠 FAISS indexes directory: {settings.faiss_path}")
+
+    # Initialize DB and seed data
+    print("🔧 Initializing database...")
+    init_db()
+    print("🌱 Seeding initial data...")
+    init_data()
+    
+    yield
+    
+    # Shutdown
+    print("👋 Shutting down RAG Tutor Backend...")
+
+
+# Create FastAPI app
+app = FastAPI(
+    title="RAG Tutor API",
+    description="Academic ERP System with AI-powered tutoring",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Mount static files for uploads
+app.mount("/uploads", StaticFiles(directory=str(settings.uploads_path)), name="uploads")
+
+# Include routers
+app.include_router(auth.router)
+app.include_router(admin.router)
+app.include_router(student.router)
+app.include_router(teacher.router)
+app.include_router(quiz.router)
+app.include_router(assignment.router)
+app.include_router(chat.router)
+app.include_router(ai_tutor.router)
+
+
+@app.get("/")
+async def root():
+    """Health check endpoint."""
+    return {
+        "status": "healthy",
+        "service": "RAG Tutor API",
+        "version": "1.0.0"
+    }
+
+
+@app.get("/health")
+async def health_check():
+    """Detailed health check."""
+    from app.ai.llm import check_ollama_health
+    
+    ollama_status = await check_ollama_health()
+    
+    return {
+        "status": "healthy",
+        "database": "connected",
+        "ollama": "connected" if ollama_status else "disconnected",
+        "ai_model": settings.OLLAMA_MODEL
+    }
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
