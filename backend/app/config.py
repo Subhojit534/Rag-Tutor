@@ -5,19 +5,22 @@ Files stored on disk, paths in MySQL.
 import os
 from pathlib import Path
 from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+
 from functools import lru_cache
 
+load_dotenv()
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
     
     # Database
-    DB_HOST: str = "localhost"
-    DB_PORT: int = 3306
-    DB_NAME: str = "rag_tutor"
-    DB_USER: str = "root"
-    DB_PASSWORD: str = ""
-    
+    DB_HOST: str = os.getenv("DB_HOST")
+    DB_PORT: int = os.getenv("DB_PORT")
+    DB_NAME: str = os.getenv("DB_NAME")
+    DB_USER: str = os.getenv("DB_USER")
+    DB_PASSWORD: str = os.getenv("DB_PASSWORD")
+
     # JWT
     JWT_SECRET_KEY: str = "change-this-secret-key"
     JWT_ALGORITHM: str = "HS256"
@@ -28,17 +31,17 @@ class Settings(BaseSettings):
     FAISS_INDEX_DIR: str = "./faiss_indexes"
     
     # AI Configuration
-    OLLAMA_BASE_URL: str = "http://localhost:11434"
-    OLLAMA_MODEL: str = "phi3:mini"
+    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL")
+    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL")
     
     # Rate Limiting
-    AI_RATE_LIMIT_PER_MINUTE: int = 10
+    AI_RATE_LIMIT_PER_MINUTE: int = os.getenv("AI_RATE_LIMIT_PER_MINUTE")
     
     @property
     def DATABASE_URL(self) -> str:
         """MySQL connection URL for SQLAlchemy."""
         from urllib.parse import quote_plus
-        return f"mysql+pymysql://{quote_plus(self.DB_USER)}:{quote_plus(self.DB_PASSWORD)}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return f"postgresql+psycopg2://{quote_plus(self.DB_USER)}:{quote_plus(self.DB_PASSWORD)}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
     
     @property
     def uploads_path(self) -> Path:
