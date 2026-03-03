@@ -15,4 +15,5 @@ build/
 # Logs
 npm-debug.log*
 
-/backend/venv
+/**/venv
+
