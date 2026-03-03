@@ -8,9 +8,9 @@ import enum
 
 
 class WeakTopicSource(str, enum.Enum):
-    QUIZ = "QUIZ"
-    AI_DOUBTS = "AI_DOUBTS"
-    COMBINED = "COMBINED"
+    QUIZ = "quiz"
+    AI_DOUBTS = "ai_doubts"
+    COMBINED = "combined"
 
 
 class WeakTopic(Base):
@@ -22,7 +22,7 @@ class WeakTopic(Base):
     subject_id = Column(Integer, ForeignKey("subjects.id"), nullable=False)
     topic_name = Column(String(255), nullable=False)
     weakness_score = Column(DECIMAL(5, 2), default=0)  # 0-100 scale
-    source = Column(Enum(WeakTopicSource), nullable=False)
+    source = Column(Enum(WeakTopicSource, values_callable=lambda x: [e.value for e in x]), nullable=False)
     quiz_error_count = Column(Integer, default=0)
     ai_doubt_count = Column(Integer, default=0)
     last_updated = Column(

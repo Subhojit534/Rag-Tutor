@@ -2,6 +2,10 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { Brain, Send, BookOpen, AlertCircle, RefreshCcw } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 import api from '@/lib/api';
 
 interface Subject {
@@ -258,7 +262,14 @@ export default function AITutorPage() {
 
                 {messages.map((message, index) => (
                     <div key={index} className={`ai-message ${message.role}`}>
-                        <div className="whitespace-pre-wrap">{message.content}</div>
+                        <div className={`prose prose-sm max-w-none ${message.role === 'user' ? 'prose-invert' : 'prose-gray'}`}>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkMath]}
+                                rehypePlugins={[rehypeKatex]}
+                            >
+                                {message.content}
+                            </ReactMarkdown>
+                        </div>
                         {message.citations && message.citations.length > 0 && (
                             <div className="mt-3 pt-3 border-t border-white/20">
                                 <p className="text-xs font-medium mb-1">📚 Sources:</p>

@@ -279,3 +279,35 @@ async def get_student_subject_detail(
         "teacher": teacher_info
     }
 
+
+@router.get("/weak-topics")
+async def get_student_weak_topics(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_student_user)
+):
+    """Get weak topics analysis for the current student."""
+    from app.models.analytics import WeakTopic
+    
+    profile = db.query(StudentProfile).filter(
+        StudentProfile.user_id == current_user.id
+    ).first()
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Student profile not found")
+        
+    weak_topics = db.query(WeakTopic).filter(
+        WeakTopic.student_id == profile.id
+    ).order_by(WeakTopic.weakness_score.desc()).all()
+    
+    return [
+        {
+            "id": wt.id,
+            "subject_id": wt.subject_id,
+            "topic_name": wt.topic_name,
+            "weakness_score": wt.weakness_score,
+            "source": wt.source.value if hasattr(wt.source, 'value') else wt.source,
+            "quiz_error_count": wt.quiz_error_count,
+            "ai_doubt_count": wt.ai_doubt_count
+        }
+        for wt in weak_topics
+    ]

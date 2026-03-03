@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     
     # AI Configuration (Google Gemini)
     GEMINI_API_KEY: str = ""
-    GEMINI_MODEL: str = "gemini-2.0-flash-lite"
+    GEMINI_MODEL: str = "gemini-2.5-flash"
     
     # Rate Limiting
     AI_RATE_LIMIT_PER_MINUTE: int = 10
