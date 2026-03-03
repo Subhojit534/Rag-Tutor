@@ -15,11 +15,11 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
     
     # Database
-    DB_HOST: str = os.getenv("DB_HOST")
-    DB_PORT: int = os.getenv("DB_PORT")
-    DB_NAME: str = os.getenv("DB_NAME")
-    DB_USER: str = os.getenv("DB_USER")
-    DB_PASSWORD: str = os.getenv("DB_PASSWORD")
+    DB_HOST: str
+    DB_PORT: int
+    DB_NAME: str
+    DB_USER: str
+    DB_PASSWORD: str
 
     # JWT
     JWT_SECRET_KEY: str = "change-this-secret-key"
@@ -31,18 +31,20 @@ class Settings(BaseSettings):
     FAISS_INDEX_DIR: str = "./faiss_indexes"
     
     # AI Configuration
-    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL")
-    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL")
-    BEDROCK_AWS_API: str = os.getenv("BEDROCK_AWS_API", None)
+    OLLAMA_BASE_URL: str | None = None
+    OLLAMA_MODEL: str | None = None
+    BEDROCK_AWS_API: str | None = None
+    GEMINI_API_KEY: str | None = None
+    GEMINI_MODEL: str | None = None
     
     # Rate Limiting
-    AI_RATE_LIMIT_PER_MINUTE: int = os.getenv("AI_RATE_LIMIT_PER_MINUTE")
+    AI_RATE_LIMIT_PER_MINUTE: int = 10
     
     @property
     def DATABASE_URL(self) -> str:
         """MySQL connection URL for SQLAlchemy."""
         from urllib.parse import quote_plus
-        return f"postgresql+psycopg2://{quote_plus(self.DB_USER)}:{quote_plus(self.DB_PASSWORD)}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return f"mysql+pymysql://{quote_plus(self.DB_USER)}:{quote_plus(self.DB_PASSWORD)}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
     
     @property
     def uploads_path(self) -> Path:
@@ -61,6 +63,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra = "ignore"
 
 
 @lru_cache()
