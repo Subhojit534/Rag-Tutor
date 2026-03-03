@@ -286,12 +286,12 @@ async def upload_class_note(
     profile = db.query(TeacherProfile).filter(
         TeacherProfile.user_id == current_user.id
     ).first()
-    
+ 
     allocation = db.query(ClassAllocation).filter(
         ClassAllocation.id == allocation_id,
         ClassAllocation.teacher_id == profile.id
     ).first()
-    
+
     if not allocation:
         raise HTTPException(status_code=404, detail="Class allocation not found")
     

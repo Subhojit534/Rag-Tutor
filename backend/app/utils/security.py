@@ -96,7 +96,7 @@ async def get_current_user(
     return user
 
 
-def require_role(*roles: UserRole):
+def     require_role(*roles: UserRole):
     """
     Dependency factory to require specific user roles.
     Usage: Depends(require_role(UserRole.ADMIN))
