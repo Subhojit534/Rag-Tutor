@@ -83,15 +83,16 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Detailed health check."""
-    from app.ai.llm import check_ollama_health
+    from app.ai.llm import check_bedrock_health
+    from app.config import settings
     
-    ollama_status = await check_ollama_health()
+    bedrock_status = check_bedrock_health()
     
     return {
         "status": "healthy",
         "database": "connected",
-        "ollama": "connected" if ollama_status else "disconnected",
-        "ai_model": settings.OLLAMA_MODEL
+        "bedrock": "connected" if bedrock_status else "disconnected",
+        "ai_model": settings.INFERENCE_PROFILE_ARN
     }
 
 

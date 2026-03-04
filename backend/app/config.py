@@ -16,11 +16,11 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
     
     # Database
-    DB_HOST: str = os.getenv("DB_HOST")
-    DB_PORT: int = os.getenv("DB_PORT")
-    DB_NAME: str = os.getenv("DB_NAME")
-    DB_USER: str = os.getenv("DB_USER")
-    DB_PASSWORD: str = os.getenv("DB_PASSWORD")
+    DB_HOST: str = os.getenv("DB_HOST") # type: ignore
+    DB_PORT: int = os.getenv("DB_PORT") # type: ignore
+    DB_NAME: str = os.getenv("DB_NAME") # type: ignore
+    DB_USER: str = os.getenv("DB_USER") # type: ignore
+    DB_PASSWORD: str = os.getenv("DB_PASSWORD") # type: ignore
 
     # JWT
     JWT_SECRET_KEY: str = "change-this-secret-key"
@@ -31,14 +31,14 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "./uploads"
     FAISS_INDEX_DIR: str = "./faiss_indexes"
     
-    # AI Configuration
-    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL")
-    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL")
-    BEDROCK_AWS_API: Optional[str] = os.getenv("BEDROCK_AWS_API", None)
+    
+    # AWS Bedrock Configuration
+    AWS_REGION: str = os.getenv("AWS_REGION", "us-east-1")
+    INFERENCE_PROFILE_ARN: str = os.getenv("INFERENCE_PROFILE_ARN", "")  # type: ignore
     AWS_BEARER_TOKEN_BEDROCK: Optional[str] = os.getenv("AWS_BEARER_TOKEN_BEDROCK", None)
     
     # Rate Limiting
-    AI_RATE_LIMIT_PER_MINUTE: int = os.getenv("AI_RATE_LIMIT_PER_MINUTE")
+    AI_RATE_LIMIT_PER_MINUTE: int = os.getenv("AI_RATE_LIMIT_PER_MINUTE") if os.getenv("AI_RATE_LIMIT_PER_MINUTE") != None else 10  # type: ignore
     
     @property
     def DATABASE_URL(self) -> str:

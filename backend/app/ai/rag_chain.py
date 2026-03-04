@@ -2,6 +2,7 @@
 RAG Chain Module - Complete Retrieval-Augmented Generation Pipeline
 """
 from typing import List, Dict, Tuple, Optional
+
 import re
 from app.ai.vector_store import get_vector_store
 from app.ai.llm import generate_response
@@ -55,7 +56,7 @@ async def rag_query(
         context_parts = []
         citations = []
         
-        for r in relevant_results:
+        for r in relevant_results: # type: ignore
             source = r.get("source", "Course Material")
             page = r.get("page", "")
             citation = f"{source}" + (f", Page {page}" if page else "")
