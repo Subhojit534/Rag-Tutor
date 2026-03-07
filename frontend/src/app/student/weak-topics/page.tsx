@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/api';
 import { Target, TrendingUp, AlertCircle, BookOpen } from 'lucide-react';
 
 interface WeakTopic {
@@ -15,23 +17,8 @@ interface WeakTopic {
 }
 
 export default function WeakTopics() {
-    const [topics, setTopics] = useState<WeakTopic[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchTopics = async () => {
-            try {
-                const response = await api.get('/api/student/weak-topics');
-                setTopics(response.data);
-            } catch (error) {
-                console.error('Failed to fetch weak topics:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTopics();
-    }, []);
+    const { data: topicsData, isLoading: loading } = useSWR<WeakTopic[]>('/api/student/weak-topics', fetcher);
+    const topics = topicsData || [];
 
     if (loading) {
         return (
