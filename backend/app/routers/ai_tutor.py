@@ -221,7 +221,7 @@ async def ai_chat(
     # Run RAG pipeline
     try:
         answer, citations, is_in_scope = await rag_query(
-          subject_id=request.subject_id,
+            subject_id=request.subject_id,
             subject_name=subject.name,
             question=request.question
         )
