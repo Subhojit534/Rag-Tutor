@@ -40,6 +40,7 @@ export default function AdminTeachers() {
 
     const loading = loadingTeachers || loadingDegrees || loadingDepartments || loadingSemesters || loadingSubjects;
     const [searchTerm, setSearchTerm] = useState('');
+    const [isAssigning, setIsAssigning] = useState(false);
 
     // Modal State
     const [showModal, setShowModal] = useState(false);
@@ -66,8 +67,9 @@ export default function AdminTeachers() {
 
     const handleAllocate = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!selectedTeacher) return;
+        if (!selectedTeacher || isAssigning) return;
 
+        setIsAssigning(true);
         try {
             const selectedSubject = subjects.find(s => s.id === parseInt(formData.subject_id));
             if (selectedSubject) {
@@ -96,6 +98,8 @@ export default function AdminTeachers() {
             console.error(error);
             alert(error.response?.data?.detail || 'Failed to assign subject');
             mutateTeachers();
+        } finally {
+            setIsAssigning(false);
         }
     };
 
@@ -320,9 +324,11 @@ export default function AdminTeachers() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-admin-primary text-white rounded-lg hover:bg-opacity-90"
+                                    disabled={isAssigning}
+                                    className={`flex-1 px-4 py-2 bg-admin-primary text-white rounded-lg transition-opacity ${isAssigning ? 'opacity-50 cursor-not-allowed' : 'hover:bg-opacity-90'
+                                        }`}
                                 >
-                                    Assign
+                                    {isAssigning ? 'Assigning...' : 'Assign'}
                                 </button>
                             </div>
                         </form>

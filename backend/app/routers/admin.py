@@ -314,6 +314,20 @@ async def create_class_allocation(
     admin: User = Depends(get_admin_user)
 ):
     """Allocate a teacher to a class (degree + department + semester + subject)."""
+    # Check for duplicate allocation
+    existing = db.query(ClassAllocation).filter(
+        and_(
+            ClassAllocation.teacher_id == request.teacher_id,
+            ClassAllocation.subject_id == request.subject_id,
+            ClassAllocation.degree_id == request.degree_id,
+            ClassAllocation.department_id == request.department_id,
+            ClassAllocation.semester_id == request.semester_id,
+            ClassAllocation.academic_year == request.academic_year
+        )
+    ).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="This allocation already exists")
+    
     allocation = ClassAllocation(**request.model_dump())
     db.add(allocation)
     
